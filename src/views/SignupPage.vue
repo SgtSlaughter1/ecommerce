@@ -1,4 +1,3 @@
-<!-- src/views/SignupPage.vue -->
 <template>
     <div class="signup-container">
         <div class="signup-card">
@@ -25,7 +24,6 @@
                     </div>
                 </div>
                 <div class="form-row">
-
                     <div class="mb-3 col">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" v-model="formData.password" required>
@@ -35,7 +33,6 @@
                         <input type="password" class="form-control" id="confirmPassword"
                             v-model="formData.confirmPassword" required>
                     </div>
-
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
@@ -50,6 +47,7 @@
                     </select>
                 </div>
                 <div v-if="errors && Object.keys(errors).length" class="text-danger">{{ errors }}</div>
+                <div v-if="registrationError" class="text-danger">{{ registrationError }}</div>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
@@ -57,78 +55,84 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+
 export default {
     name: 'SignupPage',
-    data() {
-        return {
-            formData: {
-                name: '',
-                username: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                address: '',
-                phone: '',
-                role: ''
-            },
-            errors: {} // Object to hold validation errors
-        };
-    },
-    methods: {
-        validateForm() {
-            this.errors = {}; // Reset errors
+    setup() {
+        const userStore = useUserStore();
+        const formData = ref({
+            name: '',
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            address: '',
+            phone: '',
+            role: ''
+        });
+        const errors = ref({});
+        const registrationError = ref('');
+
+        const validateForm = () => {
+            errors.value = {}; // Reset errors
             let isValid = true;
 
             // Required fields validation
-            for (const key in this.formData) {
-                if (!this.formData[key]) {
-                    this.errors[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`;
+            for (const key in formData.value) {
+                if (!formData.value[key]) {
+                    errors.value[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`;
                     isValid = false;
                 }
             }
 
             // Name and Username length validation
-            if (this.formData.name.length <= 5) {
-                this.errors.name = 'Name must be more than 5 characters long.';
+            if (formData.value.name.length <= 5) {
+                errors.value.name = 'Name must be more than 5 characters long.';
                 isValid = false;
             }
-            if (this.formData.username.length <= 5) {
-                this.errors.username = 'Username must be more than 5 characters long.';
+            if (formData.value.username.length <= 5) {
+                errors.value.username = 'Username must be more than 5 characters long.';
                 isValid = false;
             }
 
             // Email format validation
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (this.formData.email && !emailPattern.test(this.formData.email)) {
-                this.errors.email = 'Invalid email format.';
+            if (formData.value.email && !emailPattern.test(formData.value.email)) {
+                errors.value.email = 'Invalid email format.';
                 isValid = false;
             }
 
             // Password strength validation
-            if (this.formData.password && this.formData.password.length < 6) {
-                this.errors.password = 'Password must be at least 6 characters long.';
+            if (formData.value.password && formData.value.password.length < 6) {
+                errors.value.password = 'Password must be at least 6 characters long.';
                 isValid = false;
             }
 
             // Confirm password validation
-            if (this.formData.password !== this.formData.confirmPassword) {
-                this.errors.confirmPassword = 'Passwords do not match.';
+            if (formData.value.password !== formData.value.confirmPassword) {
+                errors.value.confirmPassword = 'Passwords do not match.';
                 isValid = false;
             }
 
             return isValid;
-        },
-        handleSignup() {
-            if (this.validateForm()) {
-                const existingData = JSON.parse(localStorage.getItem('userData')) || [];
-                existingData.push(this.formData);
-                localStorage.setItem('userData', JSON.stringify(existingData));
-                alert('Registration successful!');
-                this.resetForm();
+        };
+
+        const handleSignup = async () => {
+            if (validateForm()) {
+                await userStore.register(formData.value);
+                if (userStore.registrationError) {
+                    registrationError.value = userStore.registrationError;
+                } else {
+                    alert('Registration successful!');
+                    resetForm();
+                }
             }
-        },
-        resetForm() {
-            this.formData = {
+        };
+
+        const resetForm = () => {
+            formData.value = {
                 name: '',
                 username: '',
                 email: '',
@@ -138,8 +142,16 @@ export default {
                 phone: '',
                 role: ''
             };
-            this.errors = {};
-        }
+            errors.value = {};
+            registrationError.value = '';
+        };
+
+        return {
+            formData,
+            errors,
+            registrationError,
+            handleSignup
+        };
     }
 }
 </script>
@@ -150,8 +162,6 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 30px 0;
-    /* background: url('/src/assets/img3.jpg') no-repeat center center fixed;
-    background-size: cover;  */
 }
 
 .signup-card {
