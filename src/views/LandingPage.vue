@@ -50,9 +50,7 @@
                         <p class="card-description">{{ product.description }}</p>
                     </div>
                     <div class="d-flex">
-                        <button class="btn btn-cart">
-                            <i class="bi bi-cart"></i>
-                        </button>
+                        <AddToCartButton :productId="product.id" />
                         <button class="btn btn-wishlist">
                             <i class="bi bi-heart"></i>
                         </button>
@@ -64,7 +62,12 @@
 </template>
 
 <script>
+import AddToCartButton from '@/components/AddToCartButton.vue';
+
 export default {
+    components: {
+        AddToCartButton
+    },
     data() {
         return {
             carouselSlides: [
@@ -99,21 +102,21 @@ export default {
                 {
                     id: 2,
                     image: '/src/assets/img1.jpg',
-                    name: 'Product Name 4',
+                    name: 'Product Name 1',
                     price: '$49.99',
                     description: 'This is a brief description of the product. It highlights key features and benefits.'
                 },
                 {
                     id: 3,
                     image: '/src/assets/img1.jpg',
-                    name: 'Product Name 4',
+                    name: 'Product Name 2',
                     price: '$60',
                     description: 'This is a brief description of the product. It highlights key features and benefits.'
                 },
                 {
                     id: 4,
                     image: '/src/assets/img1.jpg',
-                    name: 'Product Name 4',
+                    name: 'Product Name 3',
                     price: '$49.99',
                     description: 'This is a brief description of the product. It highlights key features and benefits.'
                 }
