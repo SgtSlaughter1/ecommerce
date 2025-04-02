@@ -56,7 +56,7 @@
 
 <script>
 import { ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+// import { useUserStore } from '@/stores/userStore';
 
 export default {
     name: 'SignupPage',

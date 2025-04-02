@@ -87,8 +87,13 @@
 </template>
 
 <script>
+import CartBadge from './CartBadge.vue'
+
 export default {
-    name: 'Navbar'
+    name: 'NavBar',
+    components: {
+        CartBadge
+    }
 }
 </script>
 
@@ -97,5 +102,24 @@ export default {
     position: sticky;
     top: 0;
     z-index: 1020;
+}
+
+.navbar {
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-right {
+    gap: 1rem;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #007bff;
 }
 </style>

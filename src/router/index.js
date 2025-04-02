@@ -1,4 +1,3 @@
-
 import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '@/views/SignupPage.vue';
 import LandingPage from '@/views/LandingPage.vue';
@@ -29,6 +28,11 @@ const router = createRouter({
             path: '/product-page',
             name: 'ProductPage',
             component: ProductPage
+        },
+        {
+            path: '/cart',
+            name: 'Cart',
+            component: () => import('@/views/CartPage.vue')
         },
 
     ]
