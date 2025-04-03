@@ -1,11 +1,11 @@
 <template>
-    <div class="cart-badge" @click="$router.push('/cart')">
+    <div class="cart-badge nav-link" @click="$router.push('/cart')">
         <div class="cart-icon">
             <i class="bi bi-cart3"></i>
             <span v-if="store.cartCount" class="badge">{{ store.cartCount }}</span>
         </div>
         <span class="cart-text">My Cart</span>
-        <span v-if="store.cartCount" class="cart-total">${{ store.cartTotal }}</span>
+        <!-- <span v-if="store.cartCount" class="cart-total">${{ store.cartTotal }}</span> -->
     </div>
 </template>
 
@@ -28,7 +28,6 @@ export default {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    padding: 8px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
@@ -39,11 +38,12 @@ export default {
 
 .cart-icon {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .cart-icon i {
     font-size: 1.5rem;
-    color: #333;
 }
 
 .badge {
@@ -61,7 +61,6 @@ export default {
 
 .cart-text {
     font-size: 0.9rem;
-    color: #333;
 }
 
 .cart-total {

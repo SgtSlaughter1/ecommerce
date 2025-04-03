@@ -30,9 +30,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <router-link class="nav-link" to="/cart" aria-label="My Cart">
-                                <i class="bi bi-cart"></i> My Cart
-                            </router-link>
+                            <CartBadge />
                         </li>
                         <li class="nav-item">
                             <router-link class="nav-link" to="/login">
@@ -66,9 +64,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/cart" aria-label="My Cart">
-                            <i class="bi bi-cart"></i> My Cart
-                        </router-link>
+                        <CartBadge />
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link" to="/login">
@@ -98,6 +94,11 @@ export default {
 </script>
 
 <style scoped>
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
 .sticky-navbar {
     position: sticky;
     top: 0;
