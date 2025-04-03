@@ -1,12 +1,9 @@
 <template>
     <div class="card">
         <div class="card-image">
-            <img :src="product.image" 
-                 class="card-img-top" 
-                 :alt="product.title"
-                 @error="handleImageError">
+            <img :src="product.image" class="card-img-top" :alt="product.title" @error="handleImageError">
             <div class="overlay">
-                <button class="btn btn-wishlist" @click="$router.push(`/product/${product.id}`)">
+                <button class="btn btn-wishlist" @click="goToProductDetails">
                     More details
                 </button>
             </div>
@@ -41,14 +38,17 @@ export default {
     },
     computed: {
         truncatedDescription() {
-            return this.product.description?.length > 100 
-                ? this.product.description.substring(0, 100) + '...' 
+            return this.product.description?.length > 100
+                ? this.product.description.substring(0, 100) + '...'
                 : this.product.description
         }
     },
     methods: {
         handleImageError(e) {
-            e.target.src = '/src/assets/placeholder-image.png' 
+            e.target.src = '/src/assets/placeholder-image.png'
+        },
+        goToProductDetails() {
+            this.$router.push(`/product/${this.product.id}`)
         }
     }
 }
@@ -76,15 +76,18 @@ export default {
 .card-image {
     position: relative;
     width: 100%;
-    height: 280px; /* 1:1 aspect ratio */
+    height: 280px;
+    /* 1:1 aspect ratio */
     overflow: hidden;
 }
 
 .card-img-top {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Maintain aspect ratio */
-    background-color: #f8f9fa; /* Light background for images */
+    object-fit: contain;
+    /* Maintain aspect ratio */
+    background-color: #f8f9fa;
+    /* Light background for images */
     padding: 10px;
     transition: transform 0.3s ease;
 }
@@ -188,4 +191,4 @@ export default {
         height: 320px;
     }
 }
-</style> 
+</style>

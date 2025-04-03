@@ -1,19 +1,7 @@
 src/components/ProductPage.vue
 <template>
     <div class="product-page">
-        <div class="sidebar">
-            <h3>Product Categories</h3>
-            <ul>
-                <li v-for="category in store.categories" 
-                    :key="category"
-                    @click="handleCategoryClick(category)"
-                    :class="{ active: selectedCategory === category }"
-                    class="category-link">
-                    {{ category }}
-                </li>
-            </ul>
-        </div>
-        <div class="product-details">
+        <div class="product-container">
             <div v-if="store.loading" class="loading-container">
                 <div class="spinner"></div>
                 <p>Loading product details...</p>
@@ -44,24 +32,30 @@ src/components/ProductPage.vue
                 </button>
             </div>
 
-            <div v-else>
-                <h2>{{ store.currentProduct.title }}</h2>
-                <img :src="store.currentProduct.image" 
-                     :alt="store.currentProduct.title" 
-                     class="product-image" />
-                <p class="product-price">${{ store.currentProduct.price }}</p>
-                <p class="product-description">{{ store.currentProduct.description }}</p>
-                <h4>Product Details</h4>
-                <ul class="specifications">
-                    <li>Category: {{ store.currentProduct.category }}</li>
-                    <li>Rating: {{ store.currentProduct.rating?.rate }} 
-                        ({{ store.currentProduct.rating?.count }} reviews)</li>
-                </ul>
-                <div class="action-buttons">
-                    <AddToCartButton :product-id="store.currentProduct.id" />
-                    <button class="btn btn-wishlist">
-                        <i class="bi bi-heart"></i> Add to Wishlist
-                    </button>
+            <div v-else class="product-content">
+                <div class="product-image-container">
+                    <img :src="store.currentProduct.image" 
+                         :alt="store.currentProduct.title" 
+                         class="product-image" />
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">{{ store.currentProduct.title }}</h2>
+                    <div class="product-meta">
+                        <span class="product-category">{{ store.currentProduct.category }}</span>
+                        <div class="product-rating">
+                            <i class="bi bi-star-fill"></i>
+                            <span>{{ store.currentProduct.rating?.rate }} 
+                                ({{ store.currentProduct.rating?.count }} reviews)</span>
+                        </div>
+                    </div>
+                    <p class="product-price">${{ store.currentProduct.price }}</p>
+                    <p class="product-description">{{ store.currentProduct.description }}</p>
+                    <div class="action-buttons">
+                        <AddToCartButton :product-id="store.currentProduct.id" />
+                        <button class="btn btn-wishlist">
+                            <i class="bi bi-heart"></i> Add to Wishlist
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,82 +105,87 @@ export default {
 
 <style scoped>
 .product-page {
-    display: flex;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.product-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.product-image-container {
+    position: relative;
     padding: 20px;
-    gap: 30px;
-}
-
-.sidebar {
-    flex: 1;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-right: 1px solid #dee2e6;
-    max-width: 250px;
-}
-
-.sidebar h3 {
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.category-link {
-    padding: 10px;
-    margin: 5px 0;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.category-link:hover {
-    background-color: #e9ecef;
-    color: #007bff;
-}
-
-.category-link.active {
-    background-color: #007bff;
-    color: white;
-}
-
-.product-details {
-    flex: 3;
-    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
 }
 
 .product-image {
-    max-width: 400px;
-    height: auto;
-    margin: 20px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    display: block;
 }
 
-.product-price {
-    font-size: 24px;
-    color: #28a745;
-    font-weight: bold;
-    margin: 15px 0;
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.product-description {
-    margin: 15px 0;
-    line-height: 1.6;
+.product-title {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     color: #666;
 }
 
-.specifications {
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0;
+.product-category {
+    text-transform: capitalize;
+    background: #e9ecef;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.9rem;
 }
 
-.specifications li {
-    margin: 10px 0;
-    color: #555;
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-rating i {
+    color: #ffc107;
+}
+
+.product-price {
+    font-size: 2rem;
+    color: #28a745;
+    font-weight: bold;
+    margin: 0;
+}
+
+.product-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
 }
 
 .action-buttons {
@@ -196,12 +195,12 @@ export default {
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 4px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 1rem;
 }
 
 .btn-wishlist {
@@ -288,18 +287,8 @@ export default {
 }
 
 @media (max-width: 768px) {
-    .product-page {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        max-width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .product-image {
-        max-width: 100%;
+    .product-content {
+        grid-template-columns: 1fr;
     }
 }
 </style>

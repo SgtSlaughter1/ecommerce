@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '@/views/SignupPage.vue';
 import LandingPage from '@/views/LandingPage.vue';
 import Login from '@/views/Login.vue';
-import ProductPage from '@/views/ProductPage.vue';
+import ProductDetailPage from '@/views/ProductDetailsPage.vue';
+import ProductsPage from '@/views/ProductsPage.vue';
 
 
 const router = createRouter({
@@ -25,14 +26,19 @@ const router = createRouter({
             component: Login
         },
         {
-            path: '/product-page',
+            path: '/product/:id',
             name: 'ProductPage',
-            component: ProductPage
+            component: ProductDetailPage
         },
         {
             path: '/cart',
             name: 'Cart',
             component: () => import('@/views/CartPage.vue')
+        },
+        {
+            path: '/products',
+            name: 'Products',
+            component: ProductsPage
         },
 
     ]

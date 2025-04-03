@@ -2,12 +2,14 @@
     <section id="categories" class="text-center my-4">
         <h2>Shop by Category</h2>
         <div class="category-list">
-            <span v-for="category in categories" 
-                  :key="category" 
-                  @click="$emit('category-selected', category)"
-                  class="category-item">
+            <a href="#"
+                v-for="category in categories" 
+                :key="category" 
+                @click.prevent="$emit('category-selected', category)"
+                :class="{ active: selectedCategory === category }"
+                class="category-item">
                 ★ {{ category }}
-            </span>
+            </a>
         </div>
     </section>
 </template>
@@ -29,6 +31,12 @@ export default {
         categories() {
             return ['All', ...this.store.categories]
         }
+    },
+    props: {
+        selectedCategory: {
+            type: String,
+            default: 'All'
+        }
     }
 }
 </script>
@@ -45,5 +53,11 @@ export default {
     font-size: 1.5rem;
     color: #333;
     cursor: pointer;
+    text-decoration: none;
+}
+
+.category-item.active {
+    color: #007bff;
+    font-weight: bold;
 }
 </style> 

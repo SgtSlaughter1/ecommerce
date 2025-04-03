@@ -2,15 +2,15 @@
     <div class="body">
         <HeroCarousel />
         
-        <CategoryList @category-selected="handleCategorySelect" />
+        <CategoryList @category-selected="selectCategory" />
 
         <section id="products" class="text-center my-4">
-            <h2>Featured Products</h2>
+            <h2>{{ selectedCategory === 'All' ? 'Featured Products' : `${selectedCategory} Products` }}</h2>
             <div v-if="store.loading" class="loading">Loading...</div>
             <div v-else-if="store.error" class="error">{{ store.error }}</div>
             <div v-else class="product-cards">
                 <ProductCard 
-                    v-for="product in store.products" 
+                    v-for="product in filteredProducts" 
                     :key="product.id" 
                     :product="product"
                 />
@@ -34,19 +34,26 @@ export default {
     },
     data() {
         return {
-            store: useProductStore()
+            store: useProductStore(),
+            selectedCategory: 'All',
+            allProducts: []
         }
     },
     async created() {
         await this.store.fetchProducts()
+        this.allProducts = this.store.products
+    },
+    computed: {
+        filteredProducts() {
+            if (this.selectedCategory === 'All') return this.allProducts
+            return this.allProducts.filter(product => 
+                product.category === this.selectedCategory
+            )
+        }
     },
     methods: {
-        async handleCategorySelect(category) {
-            if (category === 'All') {
-                await this.store.fetchProducts()
-            } else {
-                await this.store.fetchProductsByCategory(category)
-            }
+        selectCategory(category) {
+            this.selectedCategory = category
         }
     }
 }

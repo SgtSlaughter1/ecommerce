@@ -51,7 +51,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/product-page">
+                        <router-link class="nav-link" to="/products">
                             <i class="bi bi-box"></i> Products
                         </router-link>
                     </li>
