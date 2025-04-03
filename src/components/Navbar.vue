@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar"> 
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Store</a>
+            <router-link class="navbar-brand" to="/">Store</router-link>
             <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNavOffcanvas" aria-controls="mobileNavOffcanvas">
                 <span class="navbar-toggler-icon"></span>
             </button>

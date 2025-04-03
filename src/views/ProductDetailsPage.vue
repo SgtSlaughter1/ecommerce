@@ -6,7 +6,7 @@ src/components/ProductPage.vue
                 <div class="spinner"></div>
                 <p>Loading product details...</p>
             </div>
-            
+
             <div v-else-if="store.error" class="error-container">
                 <div class="error-message">
                     <i class="bi bi-exclamation-triangle-fill"></i>
@@ -34,9 +34,7 @@ src/components/ProductPage.vue
 
             <div v-else class="product-content">
                 <div class="product-image-container">
-                    <img :src="store.currentProduct.image" 
-                         :alt="store.currentProduct.title" 
-                         class="product-image" />
+                    <img :src="store.currentProduct.image" :alt="store.currentProduct.title" class="product-image" />
                 </div>
                 <div class="product-info">
                     <h2 class="product-title">{{ store.currentProduct.title }}</h2>
@@ -44,7 +42,7 @@ src/components/ProductPage.vue
                         <span class="product-category">{{ store.currentProduct.category }}</span>
                         <div class="product-rating">
                             <i class="bi bi-star-fill"></i>
-                            <span>{{ store.currentProduct.rating?.rate }} 
+                            <span>{{ store.currentProduct.rating?.rate }}
                                 ({{ store.currentProduct.rating?.count }} reviews)</span>
                         </div>
                     </div>
@@ -113,7 +111,7 @@ export default {
 .product-container {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 30px;
 }
 
@@ -223,7 +221,7 @@ export default {
     padding: 40px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .error-message {
@@ -247,7 +245,8 @@ export default {
     justify-content: center;
 }
 
-.btn-retry, .btn-home {
+.btn-retry,
+.btn-home {
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 1rem;
@@ -266,7 +265,8 @@ export default {
     color: white;
 }
 
-.btn-retry:hover, .btn-home:hover {
+.btn-retry:hover,
+.btn-home:hover {
     opacity: 0.9;
     transform: translateY(-1px);
 }
@@ -282,8 +282,13 @@ export default {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 768px) {
