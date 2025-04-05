@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <div v-else>
+        <div v-else class="cart-layout">
             <div class="cart-items">
                 <div v-for="item in store.items" 
                      :key="item.id" 
@@ -33,15 +33,25 @@
             </div>
 
             <div class="cart-summary">
-                <h3>Cart Summary</h3>
-                <p>Total Items: {{ store.cartCount }}</p>
-                <p class="total">Total: ${{ store.cartTotal }}</p>
-                <button class="btn btn-success checkout-btn">
-                    Proceed to Checkout
-                </button>
-                <button class="btn btn-outline-danger" @click="store.clearCart()">
-                    Clear Cart
-                </button>
+                <div class="summary-content">
+                    <h3>Cart Summary</h3>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Total Items:</span>
+                            <span>{{ store.cartCount }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span>${{ store.cartTotal }}</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-success checkout-btn" @click="$router.push('/checkout')">
+                        Proceed to Checkout
+                    </button>
+                    <button class="btn btn-outline-danger clear-btn" @click="store.clearCart()">
+                        Clear Cart
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +78,7 @@ export default {
 <style scoped>
 .cart-page {
     padding: 20px;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -83,8 +93,18 @@ export default {
     margin-bottom: 20px;
 }
 
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    align-items: start;
+}
+
 .cart-items {
-    margin-bottom: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
 }
 
 .cart-item {
@@ -93,6 +113,10 @@ export default {
     padding: 20px;
     border-bottom: 1px solid #eee;
     gap: 20px;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
 }
 
 .cart-item img {
@@ -126,6 +150,12 @@ export default {
     border: 1px solid #ddd;
     background: white;
     border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quantity-controls button:hover {
+    background: #f8f9fa;
 }
 
 .item-total {
@@ -139,27 +169,80 @@ export default {
     border: none;
     color: #dc3545;
     cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+    color: #c82333;
 }
 
 .cart-summary {
-    padding: 20px;
-    background: #f8f9fa;
+    position: sticky;
+    top: 20px;
+    background: white;
     border-radius: 8px;
-    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.total {
+.summary-content {
+    padding: 20px;
+}
+
+.summary-details {
+    margin: 20px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-row.total {
     font-size: 1.2rem;
     font-weight: bold;
-    margin: 10px 0;
+    border-bottom: none;
+    color: #28a745;
+}
+
+.checkout-btn, .clear-btn {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
 }
 
 .checkout-btn {
-    width: 100%;
-    margin-bottom: 10px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.checkout-btn:hover {
+    background-color: #218838;
+}
+
+.clear-btn {
+    background: none;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    background-color: #dc3545;
+    color: white;
 }
 
 @media (max-width: 768px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
     .cart-item {
         flex-direction: column;
         text-align: center;
@@ -167,6 +250,10 @@ export default {
 
     .item-total {
         text-align: center;
+    }
+
+    .cart-summary {
+        position: static;
     }
 }
 </style> 

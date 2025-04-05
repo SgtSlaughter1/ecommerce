@@ -174,7 +174,7 @@ export default {
 
 .btn-wishlist {
     background-color: transparent;
-    color: #dc3545;
+    color: white;
 }
 
 .btn-wishlist:hover {
