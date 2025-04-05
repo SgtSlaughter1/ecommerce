@@ -30,19 +30,19 @@ export default {
         return {
             slides: [
                 {
-                    image: '/src/assets/slider1.webp',
+                    image: './public/images/slider1.webp',
                     title: 'Welcome to Our Store!',
                     description: 'Discover amazing products at unbeatable prices.',
                     alt: 'First slide'
                 },
                 {
-                    image: '/src/assets/slider2.webp',
+                    image: './public/images/slider2.webp',
                     title: 'Exclusive Offers Just for You',
                     description: 'Shop now and enjoy special discounts on selected items!',
                     alt: 'Second slide'
                 },
                 {
-                    image: '/src/assets/slider3.webp',
+                    image: './public/images/slider3.webp',
                     title: 'Join Our Community',
                     description: 'Sign up for our newsletter and stay updated on the latest trends.',
                     alt: 'Third slide'
