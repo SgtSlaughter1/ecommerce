@@ -2,8 +2,8 @@
     <div class="checkout-page">
         <div class="checkout-container">
             <div class="checkout-steps">
-                <div class="checkout-main">
-                    <h2>Checkout</h2>
+                <!-- Steps Sidebar -->
+                <div class="steps-sidebar">
                     <div class="progress-bar">
                         <div 
                             v-for="(step, index) in steps" 
@@ -15,159 +15,74 @@
                             }"
                         >
                             <div class="step-number">{{ index + 1 }}</div>
-                            <div class="step-label">{{ step.label }}</div>
+                            <div class="step-content">
+                                <div class="step-label">{{ step.label }}</div>
+                                <div class="step-description">{{ getStepDescription(index) }}</div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Shipping Information -->
-                    <div v-show="currentStep === 0" class="checkout-form">
-                        <h3>Shipping Information</h3>
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input 
-                                type="text" 
-                                v-model="shippingInfo.fullName" 
-                                placeholder="Enter your full name"
-                            >
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input 
-                                    type="email" 
-                                    v-model="shippingInfo.email" 
-                                    placeholder="Enter your email"
-                                >
-                            </div>
-                            <div class="form-group">
-                                <label>Phone</label>
-                                <input 
-                                    type="tel" 
-                                    v-model="shippingInfo.phone" 
-                                    placeholder="Enter your phone number"
-                                >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <input 
-                                type="text" 
-                                v-model="shippingInfo.address" 
-                                placeholder="Enter your street address"
-                            >
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>City</label>
-                                <input 
-                                    type="text" 
-                                    v-model="shippingInfo.city" 
-                                    placeholder="Enter your city"
-                                >
-                            </div>
-                            <div class="form-group">
-                                <label>State</label>
-                                <input 
-                                    type="text" 
-                                    v-model="shippingInfo.state" 
-                                    placeholder="Enter your state"
-                                >
-                            </div>
-                            <div class="form-group">
-                                <label>ZIP Code</label>
-                                <input 
-                                    type="text" 
-                                    v-model="shippingInfo.zipCode" 
-                                    placeholder="Enter ZIP code"
-                                >
-                            </div>
-                        </div>
-                    </div>
+                <!-- Main Content -->
+                <div class="checkout-main">
+                    <h2>Checkout</h2>
 
-                    <!-- Payment Information -->
-                    <div v-show="currentStep === 1" class="checkout-form">
-                        <h3>Payment Information</h3>
-                        <div class="form-group">
-                            <label>Card Number</label>
-                            <input 
-                                type="text" 
-                                v-model="paymentInfo.cardNumber" 
-                                placeholder="Enter your card number"
-                            >
+                    <Transition mode="out-in">
+                        <!-- Shipping Information -->
+                        <div v-if="currentStep === 0" key="shipping" class="checkout-form">
+                            <h3>Shipping Information</h3>
+                            <FormComponent 
+                                :fields="shippingFields"
+                                submitText="Continue to Payment"
+                                @submit="handleShippingSubmit"
+                            />
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Expiry Date</label>
-                                <input 
-                                    type="text" 
-                                    v-model="paymentInfo.expiryDate" 
-                                    placeholder="MM/YY"
-                                >
-                            </div>
-                            <div class="form-group">
-                                <label>CVV</label>
-                                <input 
-                                    type="text" 
-                                    v-model="paymentInfo.cvv" 
-                                    placeholder="CVV"
-                                >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Name on Card</label>
-                            <input 
-                                type="text" 
-                                v-model="paymentInfo.nameOnCard" 
-                                placeholder="Enter name as shown on card"
-                            >
-                        </div>
-                    </div>
 
-                    <!-- Order Review -->
-                    <div v-show="currentStep === 2" class="checkout-form">
-                        <h3>Review Order</h3>
-                        <div class="review-section">
-                            <h4>Shipping Details</h4>
-                            <div class="review-details">
-                                <p>{{ shippingInfo.fullName }}</p>
-                                <p>{{ shippingInfo.email }}</p>
-                                <p>{{ shippingInfo.phone }}</p>
-                                <p>{{ shippingInfo.address }}</p>
-                                <p>{{ shippingInfo.city }}, {{ shippingInfo.state }} {{ shippingInfo.zipCode }}</p>
+                        <!-- Payment Information -->
+                        <div v-else-if="currentStep === 1" key="payment" class="checkout-form">
+                            <h3>Payment Information</h3>
+                            <FormComponent 
+                                :fields="paymentFields"
+                                submitText="Continue to Review"
+                                @submit="handlePaymentSubmit"
+                            />
+                            <div class="form-actions">
+                                <button class="btn btn-outline" @click="previousStep">Back to Shipping</button>
                             </div>
                         </div>
-                        <div class="review-section">
-                            <h4>Payment Method</h4>
-                            <div class="review-details">
-                                <p>Card ending in {{ paymentInfo.cardNumber.slice(-4) }}</p>
-                                <p>Expiry: {{ paymentInfo.expiryDate }}</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-actions">
-                        <button 
-                            v-if="currentStep > 0" 
-                            class="btn btn-outline" 
-                            @click="previousStep"
-                        >
-                            Back
-                        </button>
-                        <button 
-                            v-if="currentStep < 2" 
-                            class="btn btn-primary" 
-                            @click="nextStep"
-                        >
-                            Continue
-                        </button>
-                        <button 
-                            v-else 
-                            class="btn btn-success" 
-                            @click="placeOrder"
-                        >
-                            Place Order
-                        </button>
-                    </div>
+                        <!-- Order Review -->
+                        <div v-else key="review" class="checkout-form">
+                            <h3>Review Order</h3>
+                            <div class="review-section">
+                                <h4>Shipping Details</h4>
+                                <div class="review-details">
+                                    <p>{{ shippingInfo.fullName }}</p>
+                                    <p>{{ shippingInfo.email }}</p>
+                                    <p>{{ shippingInfo.phone }}</p>
+                                    <p>{{ shippingInfo.address }}</p>
+                                    <p>{{ shippingInfo.city }}, {{ shippingInfo.state }} {{ shippingInfo.zipCode }}</p>
+                                </div>
+                                <div class="edit-section">
+                                    <button class="btn btn-link" @click="currentStep = 0">Edit Shipping</button>
+                                </div>
+                            </div>
+                            <div class="review-section">
+                                <h4>Payment Method</h4>
+                                <div class="review-details">
+                                    <p>Card ending in {{ paymentInfo.cardNumber.slice(-4) }}</p>
+                                    <p>Expiry: {{ paymentInfo.expiryDate }}</p>
+                                </div>
+                                <div class="edit-section">
+                                    <button class="btn btn-link" @click="currentStep = 1">Edit Payment</button>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-outline" @click="previousStep">Back to Payment</button>
+                                <button class="btn btn-success" @click="placeOrder">Place Order</button>
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
 
                 <!-- Order Summary -->
@@ -213,9 +128,13 @@
 
 <script>
 import { useCartStore } from '@/stores/cartStore'
+import FormComponent from '@/components/FormComponent.vue'
 
 export default {
     name: 'CheckoutPage',
+    components: {
+        FormComponent
+    },
     data() {
         return {
             store: useCartStore(),
@@ -239,18 +158,43 @@ export default {
                 expiryDate: '',
                 cvv: '',
                 nameOnCard: ''
-            }
+            },
+            shippingFields: [
+                { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'Enter your full name', required: true },
+                { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email', required: true, halfWidth: true },
+                { name: 'phone', label: 'Phone', type: 'tel', placeholder: 'Enter your phone number', required: true, halfWidth: true },
+                { name: 'address', label: 'Address', type: 'text', placeholder: 'Enter your street address', required: true },
+                { name: 'city', label: 'City', type: 'text', placeholder: 'Enter your city', required: true, halfWidth: true },
+                { name: 'state', label: 'State', type: 'text', placeholder: 'Enter your state', required: true, halfWidth: true },
+                { name: 'zipCode', label: 'ZIP Code', type: 'text', placeholder: 'Enter ZIP code', required: true }
+            ],
+            paymentFields: [
+                { name: 'cardNumber', label: 'Card Number', type: 'text', placeholder: 'Enter your card number', required: true },
+                { name: 'expiryDate', label: 'Expiry Date', type: 'text', placeholder: 'MM/YY', required: true, halfWidth: true },
+                { name: 'cvv', label: 'CVV', type: 'text', placeholder: 'CVV', required: true, halfWidth: true },
+                { name: 'nameOnCard', label: 'Name on Card', type: 'text', placeholder: 'Enter name as shown on card', required: true }
+            ]
         }
     },
     methods: {
+        handleShippingSubmit(formData) {
+            console.log('Shipping form submitted:', formData);
+            this.shippingInfo = { ...formData };
+            this.currentStep = 1; // Explicitly set to payment step
+        },
+        handlePaymentSubmit(formData) {
+            console.log('Payment form submitted:', formData);
+            this.paymentInfo = { ...formData };
+            this.currentStep = 2; // Explicitly set to review step
+        },
         nextStep() {
             if (this.currentStep < 2) {
-                this.currentStep++
+                this.currentStep++;
             }
         },
         previousStep() {
             if (this.currentStep > 0) {
-                this.currentStep--
+                this.currentStep--;
             }
         },
         calculateTax() {
@@ -273,6 +217,14 @@ export default {
             })
             // Navigate to confirmation page
             this.$router.push('/order-confirmation')
+        },
+        getStepDescription(index) {
+            const descriptions = {
+                0: 'Enter your shipping details',
+                1: 'Enter your payment information',
+                2: 'Review your order details'
+            }
+            return descriptions[index]
         }
     }
 }
@@ -283,6 +235,8 @@ export default {
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
+    background-color: #f8f9fa;
+    min-height: 100vh;
 }
 
 .checkout-container {
@@ -291,32 +245,34 @@ export default {
 
 .checkout-steps {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 250px 1fr 350px;
     gap: 30px;
     align-items: start;
 }
 
-.checkout-main {
+.steps-sidebar {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 30px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
 }
 
 .progress-bar {
     display: flex;
-    justify-content: space-between;
-    margin: 30px 0;
+    flex-direction: column;
+    gap: 20px;
     position: relative;
 }
 
 .progress-bar::before {
     content: '';
     position: absolute;
-    top: 15px;
-    left: 0;
-    right: 0;
-    height: 2px;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
     background: #e9ecef;
     z-index: 1;
 }
@@ -325,9 +281,25 @@ export default {
     position: relative;
     z-index: 2;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: transparent;
+}
+
+.step.active {
+    background: #f8f9fa;
+}
+
+.step.active .step-label {
+    color: #28a745;
+}
+
+.step.active .step-description {
+    color: #2c3e50;
 }
 
 .step-number {
@@ -341,62 +313,72 @@ export default {
     font-weight: bold;
     color: #6c757d;
     transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: 2px solid transparent;
 }
 
 .step.active .step-number {
-    background: #28a745;
-    color: white;
+    background: #e8f5e9;
+    color: #28a745;
+    border-color: #28a745;
 }
 
 .step.completed .step-number {
     background: #28a745;
     color: white;
+    border-color: transparent;
+}
+
+.step-content {
+    flex-grow: 1;
 }
 
 .step-label {
-    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.step-description {
+    font-size: 0.85rem;
     color: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.checkout-main {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 30px;
 }
 
 .checkout-form {
     margin-top: 30px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
-.form-group {
-    margin-bottom: 20px;
+.checkout-form.v-enter-active,
+.checkout-form.v-leave-active {
+    transition: opacity 0.3s ease;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+.checkout-form.v-enter-from,
+.checkout-form.v-leave-to {
+    opacity: 0;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #495057;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-input:focus {
-    outline: none;
-    border-color: #28a745;
-    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+.checkout-form h3 {
+    margin-bottom: 24px;
+    color: #2c3e50;
+    font-size: 1.5rem;
 }
 
 .form-actions {
-    margin-top: 30px;
+    margin-top: 24px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: flex-end;
 }
 
@@ -406,6 +388,7 @@ input:focus {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    border: none;
 }
 
 .btn-outline {
@@ -419,19 +402,8 @@ input:focus {
     color: white;
 }
 
-.btn-primary {
-    background: #007bff;
-    border: none;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
 .btn-success {
     background: #28a745;
-    border: none;
     color: white;
 }
 
@@ -534,6 +506,32 @@ input:focus {
     color: #6c757d;
 }
 
+.edit-section {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.edit-section button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+@media (max-width: 1200px) {
+    .checkout-steps {
+        grid-template-columns: 1fr 350px;
+    }
+
+    .steps-sidebar {
+        display: none;
+    }
+}
+
 @media (max-width: 768px) {
     .checkout-steps {
         grid-template-columns: 1fr;
@@ -543,8 +541,8 @@ input:focus {
         position: static;
     }
 
-    .form-row {
-        grid-template-columns: 1fr;
+    .checkout-main {
+        padding: 20px;
     }
 }
 </style> 
